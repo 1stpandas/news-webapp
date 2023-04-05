@@ -1,8 +1,13 @@
 import type { HTMLAttributes, ReactNode } from 'react'
 
-const Button = ({ children, color = 'primary', ...restProps }: ButtonProps) => {
+const Button = ({
+	children,
+	color = 'primary',
+	className,
+	...restProps
+}: ButtonProps) => {
 	return (
-		<button className={buttonStyles[color]} {...restProps}>
+		<button className={`${className} ${buttonStyles[color]}`} {...restProps}>
 			{children}
 		</button>
 	)
