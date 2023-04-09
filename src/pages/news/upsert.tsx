@@ -92,6 +92,7 @@ export default function CreatePostPage({ data }: PageProps) {
 						<option value='international'>International</option>
 						<option value='FR'>France</option>
 						<option value='DE'>Germany</option>
+						<option value='FD'>Food</option>
 					</select>
 				</div>
 			</div>
