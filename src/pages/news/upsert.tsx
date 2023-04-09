@@ -93,6 +93,7 @@ export default function CreatePostPage({ data }: PageProps) {
 						<option value='FR'>France</option>
 						<option value='DE'>Germany</option>
 						<option value='FD'>Food</option>
+						<option value='EN'>Education</option>
 					</select>
 				</div>
 			</div>
