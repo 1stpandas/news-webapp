@@ -1,19 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
 import { useAuthContext } from '@/contexts/AuthContext'
-import { ThemeContext } from '@/contexts/ThemeContext'
 import { UserSession } from '@/types/global'
 import supabase from '@/utils/supabase'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { ReactNode, useContext, useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { toast } from 'react-hot-toast'
 import Button from './Button'
 import MainLogo from './MainLogo'
 import TextInput from './TextInput'
 const Navbar = () => {
-	const { theme, switchTheme } = useContext(ThemeContext)
-
+	
 	const { user, setUser } = useAuthContext()
 	const [isOpen, setIsOpen] = useState(false)
 
@@ -69,9 +67,6 @@ const Navbar = () => {
 									className='block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-red-700 md:p-0 dark:text-white md:dark:hover:text-red-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 cursor-pointer'
 								>
 									Logout
-								</li>
-								<li onClick={() => switchTheme()} className='text-black'>
-									change theme
 								</li>
 							</>
 						)}
