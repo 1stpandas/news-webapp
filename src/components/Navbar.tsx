@@ -27,7 +27,7 @@ const Navbar = () => {
 	}
 
 	return (
-		<nav className='bg-white bg-opacity-25 backdrop-blur-md border-gray-200 dark:border-gray-700 border-b dark:bg-gray-900 fixed top-0 w-screen'>
+		<nav className='bg-white backdrop-blur-md border-gray-200 dark:border-gray-700 border-b dark:bg-gray-900 fixed top-0 w-screen'>
 			<div className='max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 gap-2'>
 				<Link href='/' className='flex items-center'>
 					<MainLogo />
@@ -50,9 +50,9 @@ const Navbar = () => {
 							xmlns='http://www.w3.org/2000/svg'
 						>
 							<path
-								fill-rule='evenodd'
+								fillRule='evenodd'
 								d='M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z'
-								clip-rule='evenodd'
+								clipRule='evenodd'
 							></path>
 						</svg>
 					</button>
