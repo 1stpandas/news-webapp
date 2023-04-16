@@ -27,7 +27,7 @@ const Navbar = () => {
 	}
 
 	return (
-		<nav className='bg-white backdrop-blur-md border-gray-200 dark:border-gray-700 border-b dark:bg-gray-900 fixed top-0 w-screen'>
+		<nav className='z-50 bg-white backdrop-blur-md border-gray-200 dark:border-gray-700 border-b dark:bg-gray-900 fixed top-0 w-screen'>
 			<div className='max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 gap-2'>
 				<Link href='/' className='flex items-center'>
 					<MainLogo />
