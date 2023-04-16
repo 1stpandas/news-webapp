@@ -10,3 +10,4 @@ module.exports = {
 	},
 	plugins: [],
 }
+ //framework tailwinds css menggunakan classname untuk styling yang akan dicompile menjadi CSS biasa

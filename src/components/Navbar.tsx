@@ -61,7 +61,7 @@ const Navbar = () => {
 					className={`${
 						// menggunakan css untuk menampilkan atau menyembunyikan menu mobile
 						isMobileOpen ? '' : 'hidden'
-					} items-center justify-between w-full md:flex md:w-auto md:order-1`}
+						} items-center justify-between w-full md:flex md:w-auto md:order-1`}
 					id='mobile-menu-2'
 				>
 					{/* tag <ul> ini akam merender item-item navbar, yang bisa diguakan user unutk bernavikasi seputar aplikasi */}
@@ -111,7 +111,7 @@ const NavLink = ({ href, children }: { href: string; children: ReactNode }) => {
 					isActive
 						? 'dark:text-blue-500 text-blue-700'
 						: 'md:hover:text-blue-700 md:dark:hover:text-blue-500'
-				} block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
+					} block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
 			>
 				{children}
 			</Link>
@@ -132,13 +132,16 @@ const ProfileButton = () => {
 		<div className=''>
 			{/* jika ada user maka akan ditampilkan foto profil user*/}
 			{user ? (
-				<img
-					className='object-cover flex text-sm bg-gray-800 md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600 w-10 h-10 rounded-full'
-					src={user.imageUrl || '/noProfile.jpeg'}
-					alt='user photo'
-					width={40}
-					height={40}
-				/>
+				<div className='flex flex-row gap-2 items-center'>
+					<img
+						className='object-cover flex text-sm bg-gray-800 md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600 w-10 h-10 rounded-full'
+						src={user.imageUrl || '/noProfile.jpeg'}
+						alt='user photo'
+						width={40}
+						height={40}
+					/>
+					<span>{user.username}</span>
+				</div>
 			) : (
 				// jika tidak maka akan ditampilkan tombol untuk login atau register
 				// saat button di klik, maka akan menampilkan modal login atau register yaitu <AuthModal />
