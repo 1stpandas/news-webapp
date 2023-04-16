@@ -1,3 +1,5 @@
+// komponen <TextInput /> ini akan digunakan untuk membuat input text
+// kompoenen ini adalah komponen html biasa yang sudah di styling menggunakan css
 const TextInput = ({ label, className, ...restProps }: TextInputProps) => {
 	return (
 		<div>

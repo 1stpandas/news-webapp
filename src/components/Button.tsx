@@ -1,5 +1,8 @@
 import type { HTMLAttributes, ReactNode } from 'react'
 
+// komponen ini akan digunakan untuk membuat button
+// komponen ini adalah komponen html biasa yang sudah di styling menggunakan css
+// komponen ini memiliki properti 'color' yang bisa diisi dengan 'primary', 'alternative', atau 'danger' yang dideklarasikan styingnya pada objek 'buttonStyles' dibawah
 const Button = ({
 	children,
 	color = 'primary',
@@ -20,6 +23,7 @@ interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
 	type?: 'button' | 'submit'
 }
 
+// objek ini berisi styling untuk button dengan pilihan 'color' tertentu
 const buttonStyles = {
 	primary:
 		'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800',

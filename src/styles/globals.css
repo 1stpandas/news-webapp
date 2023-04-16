@@ -1,3 +1,5 @@
+/* prendeklarasian TailwindCSS */
+/* tailwindCSS adalah adalah framework css yang digunakan pada apliasi ini*/
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

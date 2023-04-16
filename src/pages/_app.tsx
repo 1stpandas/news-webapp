@@ -7,6 +7,9 @@ import type { AppProps } from 'next/app'
 import { ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
 
+// komponen <App/> adalah komponen parent dari seluruh komponen pada aplikasi ini
+// komponen ini adalah titik masuk dari aplikasi ini
+// seluruh deklarasi pada komponen ini akan berdampak pada seluruh halaman pada aplikasi ini
 export default function App({ Component, pageProps }: AppProps) {
 	return (
 		<Layout>
@@ -14,13 +17,24 @@ export default function App({ Component, pageProps }: AppProps) {
 		</Layout>
 	)
 }
+
+// Komponen layout adalah komponen yang akan di render di setiap halaman
+// berisikan komponen navbar, footer, dan komponen lain yang akan di render di setiap halaman
 const Layout = ({ children }: { children: ReactNode }) => (
+	// disini juga ada komponen <AuthProvider> dan <ThemeProvider>
+	// provider diguankan untuk menyediakan data yang bisa diakses oleh komponen-komponen dibawahnya
+	// data yang bersangukutan adalah data user utnuk <AuthProvider> dan data tema untuk <ThemeProvider>
+	// data-data tersebut dideklarasikan pada file contexts/AuthContext.tsx dan contexts/ThemeContext.tsx, tetapi bisa diakses oleh seluruh komponen lain pada aplikasi ini.
 	<AuthProvider>
 		<ThemeProvider>
-			<div className='bg-white dark:bg-black'>
+			<div className='bg-white dark:bg-gray-900'>
+				{/* <Toaster/> adalah penginisialisasian library/tool toast untuk menampilkan pesan notifikasi */}
+				{/* disini juga di konfigurasikan posisi notifikasi toastnya pada posisi 'top-right' atau atas-kanan */}
 				<Toaster position='top-right' />
 				<Navbar />
 				<div className='py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 mt-10'>
+					{/* children merupakan seluruh komponen yang ada dibawahnya */}
+					{/* karena komponen ini adalah komponen <Layout/> maka komponen ini beradap pada lapisan paling atas dan 'children' adalah seluruh halaman pada aplikasi ini. */}
 					{children}
 				</div>
 				<Footer />

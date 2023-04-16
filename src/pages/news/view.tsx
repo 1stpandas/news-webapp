@@ -8,16 +8,43 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { toast } from 'react-hot-toast'
 
+// pengambilan data dari database
+export const getServerSideProps = async ({
+	// query adalah id dari news yang diambil dari url
+	// misalnya jika urlnya '/news/view?id=ABC123' maka query.id = 'ABC123' dan dicari data dengan id ABC123 pada database
+	query,
+}: GetServerSidePropsContext) => {
+	const { error, data } = await supabase
+		.from('news')
+		.select(
+			'id, thumbnailUrl, title, content, createdAt, category, users(username, imageUrl)'
+		)
+		.eq('id', query.id)
+		.single()
+	if (error) throw error
+	return { props: { news: data } }
+}
+
+// kompoenn ViewPostPage adalah komponen utama pada halaman ini
+// komponen ini mengkonsumsi properti { news } yang didapat dari getServerSideProps() diatas yang adalah data berita tertentu yang diambil dari database
 export default function ViewPostPage({ news }: PageProps) {
+	// mengunakan useAuthContext() untuk mengambil data user yang sedang login
 	const { user } = useAuthContext()
+	// router adalah fungsi untuk mengarahkan pengguna ke halaman tertentu
 	const router = useRouter()
 	const author = news.users as { username: string; imageUrl: string }
 
+	// funcsi untuk menghapus berita
 	const handleDeleteNews = async () => {
+		// konfirmasi pengguna apakah yakin ingin menghapus berita
 		const conf = confirm('Are you sure you want to delete this post?')
+		// jika pengguna tidak yakin maka berhenti dan tampilkan pesan 'Nothing changed!' mengunakan toast
+		// toast adalah library yang digunakan untuk menampilkan pesan notifikasi, library ini di inisialisasi pada file '_app.tsx'
 		if (!conf) return toast('Nothing changed!')
+		// jika pengguna yakin maka hapus data berita dari database
 		const { error } = await supabase.from('news').delete().eq('id', news.id)
 		if (error) return toast.error(error.message)
+		// jika berhasil maka arahkan pengguna ke halaman utama dan tampilkan pesan 'Post deleted successfully' menggunakan toast
 		router.push('/')
 		toast.success('Post deleted successfully')
 	}
@@ -38,8 +65,10 @@ export default function ViewPostPage({ news }: PageProps) {
 						<time>{dayjs(news.createdAt).format('DD MMMM YYYY, HH:mm')}</time>
 					</div>
 				</div>
+				{/* jika ada user yang login maka akan menamilkan kedua <Button/> dibawah utnuk mengubah dan menghapus berita */}
 				{user && (
 					<div className='flex gap-2'>
+						{/* jika pengguna mengklik tombol update maka akan diarahkan ke halaman update berita dengan mengirimkan id berita yang akan diubah, seperti 'news/upsert?id=ABC123' */}
 						<Link href={`/news/upsert?id=${news.id}`}>
 							<Button className='flex gap-2 items-center'>
 								Update
@@ -62,6 +91,7 @@ export default function ViewPostPage({ news }: PageProps) {
 						<Button
 							color='danger'
 							className='flex gap-2 items-center'
+							// ketika tombol delete diklik maka akan menjalankan fungsi handleDeleteNews() yang dideklarasikan diatas
 							onClick={handleDeleteNews}
 						>
 							Delete
@@ -91,11 +121,14 @@ export default function ViewPostPage({ news }: PageProps) {
 				className='w-full rounded-md'
 			/>
 			<p>{news.content}</p>
+			{/* komponen <RelatedNews/> dideklarasikan dibawah */}
 			<RelatedNews />
 		</div>
 	)
 }
 
+// related news adalah komponen yang menampilkan 4 berita terkait
+// tetapi pada kompoen ini datanya masih 'hardcoded' atau statis belum dari database
 const RelatedNews = () => {
 	return (
 		<section>
@@ -126,20 +159,6 @@ const RelatedNewsCard = () => {
 			</Link>
 		</article>
 	)
-}
-
-export const getServerSideProps = async ({
-	query,
-}: GetServerSidePropsContext) => {
-	const { error, data } = await supabase
-		.from('news')
-		.select(
-			'id, thumbnailUrl, title, content, createdAt, category, users(username, imageUrl)'
-		)
-		.eq('id', query.id)
-		.single()
-	if (error) throw error
-	return { props: { news: data } }
 }
 
 type PageProps = Awaited<ReturnType<typeof getServerSideProps>>['props']

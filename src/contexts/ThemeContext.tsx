@@ -2,15 +2,21 @@ import {
 	createContext,
 	ReactNode,
 	useCallback,
+	useContext,
 	useEffect,
 	useState,
 } from 'react'
 
-export const ThemeContext = createContext({} as ThemeContext)
+// konsep Context ini sama saja dengan pada /contexts/AuthContext.tsx
+
+const ThemeContext = createContext({} as ThemeContext)
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+	// variabel theme menyimpan data tema yang sedang digunakan
+	// variabel ini bisa berisi 'dark' atau 'light'
 	const [theme, setTheme] = useState<Theme>('light')
 
+	// mengecek apakah ada tema yang pernah disimpan di localStorage sebelumnya
 	useEffect(() => {
 		setTheme((localStorage.getItem('theme') as Theme) || 'light')
 	}, [])
@@ -22,12 +28,14 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 		[]
 	)
 
+	// proses untuk mengubah tema
 	useEffect(() => {
 		const root = window.document.documentElement
 		root.classList.remove(themeToSwitch)
 		root.classList.add(theme)
 	}, [theme])
 
+	// funsi ini akan digunakan untuk mengubah tema
 	const switchTheme = () => {
 		toggleColorMode()
 		localStorage.setItem('theme', themeToSwitch)
@@ -46,6 +54,9 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 		</>
 	)
 }
+
+export const useThemeContext = () => useContext(ThemeContext)
+
 type Theme = 'dark' | 'light'
 
 interface ThemeContext {

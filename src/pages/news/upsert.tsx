@@ -15,8 +15,30 @@ interface PageProps {
 	}
 }
 
+// fungsi ini akan mengambil data berita dari database berdasarkan id yang diambil dari url
+// jika id tidak ada maka akan mengembalikan properti kosong, maka akan diartikan bahwa pengguna akan membuat berita baru
+// jika id ada maka akan mengambil data berita dari database dan mengembalikan properti data yang berisi data berita tersebut, dan data tersebut akan dijadikan nilai awal pada form yang akan dirender
+export const getServerSideProps = async ({
+	query,
+}: GetServerSidePropsContext) => {
+	if (!query.id) return { props: {} }
+	const { data, error } = await supabase
+		.from('news')
+		.select('title,content,thumbnailUrl,category,id')
+		.eq('id', query.id)
+		.single()
+	if (error) throw error
+
+	return {
+		props: { data },
+	}
+}
+
 export default function CreatePostPage({ data }: PageProps) {
 	const { user } = useAuthContext()
+	// deklarasi variabel formData yang berisi data berita yang akan diinputkan oleh pengguna
+	// jika pengguna akan membuat berita baru maka formData akan diisi dengan nilai awal berupa object kosong
+	// jika pengguna akan mengedit berita maka formData akan diisi dengan nilai awal berupa data berita yang diambil dari database
 	const [formData, setFormData] = useState(
 		data || {
 			id: undefined,
@@ -26,10 +48,15 @@ export default function CreatePostPage({ data }: PageProps) {
 			content: '',
 		}
 	)
+	// jika pengguna belum login maka akan ditampilkan pesan 401
+	// ini akan menghindari pengguna yang belum login untuk mengakses halaman ini
 	if (!user) return <div>401</div>
 
+	// fungsi ini akan dijalankan ketika submisi form dibawah
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
+		// mengecek apakah properti id pada formData yang dideklarasikan diatas ada atau tidak
+		// jika ada maka diasumsikan bahwa data pada database sudah ada dan user ingin mengubahnya
 		if (formData.id) {
 			const { error } = await supabase
 				.from('news')
@@ -41,12 +68,15 @@ export default function CreatePostPage({ data }: PageProps) {
 					description: formData.content.slice(0, 200),
 				})
 				.eq('id', formData.id)
+			// pesan error atau sukses dengan mengunakan library toast
 			if (error) return toast.error(error.message)
 			return toast.success('Post updated successfully')
 		}
+		// jika properti id tidak ada maka diasumsikan bahwa data pada database belum ada dan user ingin membuatnya
 		const { error } = await supabase.from('news').insert({
 			...formData,
 			userId: user?.id,
+			// pembuata deskripsi berita yang dibuat dari 200 karakter pertama dari konten berita yang diisi oleh pengguna
 			description: formData.content.slice(0, 200),
 		})
 		if (error) return toast.error(error.message)
@@ -54,13 +84,23 @@ export default function CreatePostPage({ data }: PageProps) {
 	}
 
 	return (
-		<form className='space-y-6' onSubmit={handleSubmit}>
+		<form
+			className='space-y-6'
+			// ketika form di submit maka fungsi handleSubmit() akan eksekusi
+			onSubmit={handleSubmit}
+		>
 			<div>
+				{/* komponen <TextInput/> adalah komponen kustom pada file '/components/TextInput.tsx'
+				komponen ini akan menampilkan input text dengan label dan placeholder yang dapat diatur*/}
 				<TextInput
 					label='Title'
 					placeholder='Something happend last night'
+					// value pada input ini dikaitkan dengan properti title pada objek formData
 					value={formData.title}
+					// ketika pengguna mengisi form input ini maka fungsi onChange akan dijalankan dan mengubah properti title pada objek formData
 					onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+					// properti required digunakan untuk menandakan bahwa input ini wajib diisi.
+					required
 				/>
 			</div>
 			<div className='grid gap-6 md:grid-cols-2'>
@@ -72,6 +112,7 @@ export default function CreatePostPage({ data }: PageProps) {
 						onChange={(e) =>
 							setFormData({ ...formData, thumbnailUrl: e.target.value })
 						}
+						required
 					/>
 				</div>
 				<div>
@@ -119,20 +160,4 @@ export default function CreatePostPage({ data }: PageProps) {
 			<Button type='submit'>Submit</Button>
 		</form>
 	)
-}
-
-export const getServerSideProps = async ({
-	query,
-}: GetServerSidePropsContext) => {
-	if (!query.id) return { props: {} }
-	const { data, error } = await supabase
-		.from('news')
-		.select('title,content,thumbnailUrl,category,id')
-		.eq('id', query.id)
-		.single()
-	if (error) throw error
-
-	return {
-		props: { data },
-	}
 }

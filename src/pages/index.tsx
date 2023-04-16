@@ -1,44 +1,73 @@
+/* eslint-disable @next/next/no-img-element */
 import Button from '@/components/Button'
 import supabase from '@/utils/supabase'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 
-/* eslint-disable @next/next/no-img-element */
-export default function IndexPage({ news }: PageProps) {
+// ini adalah function untuk mengambil data dari database
+// semua baris database akan ambil dan kolom yang diambil adalah 'id, thumbnailUrl, title, dll...'
+// pengambilan data dari database mengunakan library/tool dari supabase yang sudah di konfigurasi pada file /utils/supabase.ts
+export const getServerSideProps = async () => {
+	const { error, data } = await supabase
+		.from('news')
+		.select(
+			'id, thumbnailUrl, title, description, createdAt, category, users(username, imageUrl)'
+		)
+	if (error) throw error
+	// data yang diambil dari database akan di konsumsi oleh komponen <HomePage/> dibawah
+	// variabel propertinya dinamakan 'news'
+	return { props: { news: data } }
+}
+
+// komponen yang render halaman home => HomePage
+// komponen ini menerima properti dari function getServerSideProps() diatas yang isikan 'news'
+export default function HomePage({ news }: PageProps) {
 	return (
 		<>
-			<section className='grid max-w-screen-xl lg:gap-8 xl:gap-0 lg:py-12 lg:grid-cols-12'>
-				<div className='mr-auto place-self-center lg:col-span-7'>
-					<h1 className='max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white'>
-						Payments tool for software companies
-					</h1>
-					<p className='max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400'>
-						From checkout to global sales tax compliance, companies around the world
-						use Flowbite to simplify their payment stack.
-					</p>
-					<div className='flex gap-2'>
-						<Link href='/#news'>
-							<Button>Browse News</Button>
-						</Link>
-						<Link href='/#about'>
-							<Button color='alternative'>Learn More</Button>
-						</Link>
-					</div>
-				</div>
-				<div className='hidden lg:mt-0 lg:col-span-5 lg:flex'>
-					<img
-						src='https://flowbite.s3.amazonaws.com/blocks/marketing-ui/hero/phone-mockup.png'
-						alt='mockup'
-					/>
-				</div>
-			</section>
+			{/* komponen ini berisikan 3 komponen yang dideklarasikan dibawah */}
+			{/* urutanya sesuai dengan yang ditampilkan pada browser */}
+			<Hero />
 			<About />
+			{/* komponen <News/> menerima data 'news' yang akan digunakan*/}
 			<News news={news} />
 		</>
 	)
 }
 
+// ini komponen hero atau bagian selamat datang pada halaman home
+const Hero = () => (
+	<section className='grid max-w-screen-xl lg:gap-8 xl:gap-0 lg:py-12 lg:grid-cols-12'>
+		<div className='mr-auto place-self-center lg:col-span-7'>
+			<h1 className='max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white'>
+				Payments tool for software companies
+			</h1>
+			<p className='max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400'>
+				From checkout to global sales tax compliance, companies around the world use
+				Flowbite to simplify their payment stack.
+			</p>
+			<div className='flex gap-2'>
+				{/* penggunaan <Link/> untuk berpindah halaman */}
+				{/* disini ketika user tekan tombol  <Button>Browse News</Button> maka akan dipindahkan ke halaman /#news */}
+				<Link href='/#news'>
+					{/* komponen <Button/> adalah komponen custom yang dibuat dan di import pada baris 2 */}
+					<Button>Browse News</Button>
+				</Link>
+				<Link href='/#about'>
+					<Button color='alternative'>Learn More</Button>
+				</Link>
+			</div>
+		</div>
+		<div className='hidden lg:mt-0 lg:col-span-5 lg:flex'>
+			<img
+				src='https://flowbite.s3.amazonaws.com/blocks/marketing-ui/hero/phone-mockup.png'
+				alt='mockup'
+			/>
+		</div>
+	</section>
+)
+
 const About = () => (
+	// tag <section/> dibawah memiliki id='about' yang akan digunakan untuk berpindah halaman mengunakan <Link href='/#about'/> seperti contoh pada baris 51 diatas
 	<section id='about' className='pt-20'>
 		<div className='max-w-screen-md mb-8 lg:mb-16'>
 			<h2 className='mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white'>
@@ -179,6 +208,9 @@ const About = () => (
 	</section>
 )
 
+// komponen news adalah komponen paling penting di halaman home
+// komponen ini menerima property 'news' dari komponen <HomePage /> diatas
+// property 'news' ini adalah array yang berisi data-data berita yang di ambil dari database
 const News = ({ news }: { news: PageProps['news'] }) => {
 	return (
 		<section id='news' className='pt-20'>
@@ -192,7 +224,10 @@ const News = ({ news }: { news: PageProps['news'] }) => {
 				</p>
 			</div>
 			<div className='grid gap-4 lg:grid-cols-3'>
+				{/* news.map adalah proses untuk mengulang atau iterasi komponen <NewsCard /> sebanyak jumlah data yang ada di dalam array 'news' */}
+				{/* jadi misalnya jika array news dari database memiliki panjang 10 maka akan ada 10 komponen <NewsCard/> yang dirender */}
 				{news.map((post) => (
+					// komponen <NewsCard/> dideklarasikan di bawah
 					<NewsCard {...post} key={post.id} />
 				))}
 			</div>
@@ -200,6 +235,8 @@ const News = ({ news }: { news: PageProps['news'] }) => {
 	)
 }
 
+// komponen <NewsCard/> ini menerima property dari komponen <News/> diatas
+// propertinya berupa { title, description, dll...}
 const NewsCard = ({
 	title,
 	description,
@@ -212,6 +249,9 @@ const NewsCard = ({
 	const author = users as { username: string; imageUrl: string }
 	return (
 		<article className='p-4 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700'>
+			{/* property yang diterima akan digunakan seperti ini */}
+			{/* thumbnail yang diterima akan digunakan pada src */}
+			{/* ini membuat setiap komponen <NewsCard/> berbeda dengan yang lain, karena akan merender data yang berbeda */}
 			<img
 				src={thumbnailUrl}
 				alt='thumbnail'
@@ -230,25 +270,33 @@ const NewsCard = ({
 					{category}
 				</span>
 				<span className='text-sm'>
+					{/* dayjs adalah salah satu library/tool yang digunakan untuk mengformat tanggal agar lebih mudah dibaca */}
 					{dayjs(createdAt).format('DD MMMM YYYY, HH:mm')}
 				</span>
 			</div>
 			<h2 className='mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white hover:text-blue-700 dark:hover:text-blue-300'>
+				{/* jika user mengklik link ini maka akan diarahkan ke halaman berita dengan id yang sesuai */}
 				<Link href={`/news/view?id=${id}`}>{title}</Link>
 			</h2>
 			<p className='mb-5 font-light text-gray-500 dark:text-gray-400'>
+				{/* dekripsi dari berita */}
+				{/* deskripsi adalah konten dari berita yang diisi user pada halaman '/news/upsert' yang hanya diambil 4 baris pertamanya. */}
 				{description}
 			</p>
 			<div className='flex justify-between items-center'>
 				<div className='flex items-center space-x-4'>
 					<img
 						className='w-7 h-7 rounded-full'
+						// pada src <img> ini akan mengecek apakah author memiliki imageUrl atau tidak
+						// karena imageUrl tidak wajib diisi oleh user yang signup pada aplikasi
+						// jadi jika imageUrl tidak ada maka akan digunakan gambar default yaitu '/noProfile.jpeg'
 						src={author.imageUrl || '/noProfile.jpeg'}
 						alt='Jese Leos avatar'
 					/>
 					<span className='font-medium dark:text-white'>{author.username}</span>
 				</div>
 				<Link
+					// jika user mengklik link ini maka akan diarahkan ke halaman berita dengan id yang sesuai
 					href={`/news/view?id=${id}`}
 					className='inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline'
 				>
@@ -271,13 +319,4 @@ const NewsCard = ({
 	)
 }
 
-export const getServerSideProps = async () => {
-	const { error, data } = await supabase
-		.from('news')
-		.select(
-			'id, thumbnailUrl, title, description, createdAt, category, users(username, imageUrl)'
-		)
-	if (error) throw error
-	return { props: { news: data } }
-}
 type PageProps = Awaited<ReturnType<typeof getServerSideProps>>['props']
