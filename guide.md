@@ -29,6 +29,5 @@ framework yg dipake punya hirarki yang terdiri dari kompoen-komponen.
 hirarki paling tinggi itu akan mempengharui seluru komponen yang dibawahnya.
 file /src/pages/\_app.tsx itu komponen hirarki paling tinggi.
 dan dibahawa komponen ini itu halaman-halaman di ini aplikasi.
-
 typescript, untuk support tipe datanya dan typesafety
 ada beberapa code yang digunakan pada satu file tetapi di deklarasikan difile lain dan diimport difile yg ingin dipakai

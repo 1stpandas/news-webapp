@@ -224,7 +224,7 @@ const AuthModal = ({ toggleModal }: { toggleModal: () => void }) => {
 								onChange={(e) => setFormData({ ...formData, username: e.target.value })}
 								value={formData.username}
 								label='Your Username'
-								placeholder='randomusername123'
+								placeholder='Username'
 								required
 							/>
 						</div>
