@@ -131,11 +131,19 @@ export default function CreatePostPage({ data }: PageProps) {
 					>
 						<option value='criminal'>Criminal</option>
 						<option value='international'>International</option>
-						<option value='FR'>France</option>
-						<option value='DE'>Germany</option>
+						<option value='ST'>Sport</option>
+						<option value='PS'>Politics</option>
 						<option value='FD'>Food</option>
 						<option value='EN'>Education</option>
 						<option value='GS'>Games</option>
+						<option value='FN'>Fashion</option>
+						<option value='TY'>Technology</option>
+						<option value='AT'>Art</option>
+						<option value='MC'>Music</option>
+						<option value='AE'>Automotive</option>
+						<option value='HH'>Heatlh</option>
+						<option value='RN'>Religion</option>
+						<option value='TG'>Traveling</option>
 					</select>
 				</div>
 			</div>

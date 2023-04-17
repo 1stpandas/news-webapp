@@ -210,7 +210,7 @@ const AuthModal = ({ toggleModal }: { toggleModal: () => void }) => {
 					<div className='flex justify-between items-center'>
 						<h1 className='text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white'>
 							{/* merender text yang berbeda tergatung dari tampilan register atau login */}
-							{isSignUp ? 'Create an account' : 'Sign in to your account'}
+							{isSignUp ? 'Create an Publisher account' : 'Sign in to your Publisher account'}
 						</h1>
 						<span onClick={toggleModal}>X</span>
 					</div>
